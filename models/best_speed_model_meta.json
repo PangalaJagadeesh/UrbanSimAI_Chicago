@@ -1,0 +1,32 @@
+{
+  "saved_at": "2025-12-14 04:52:17 UTC",
+  "best_model": "XGBoost",
+  "feature_cols": [
+    "zip",
+    "cta_stop_count",
+    "zhvi",
+    "hour",
+    "dow",
+    "month",
+    "weekofyear",
+    "is_weekend",
+    "is_holiday",
+    "lag_1",
+    "lag_2",
+    "lag_3",
+    "lag_24",
+    "lag_168",
+    "roll_mean_3",
+    "roll_mean_6",
+    "roll_mean_24",
+    "roll_std_24"
+  ],
+  "target": "avg_speed",
+  "test_start": "2025-11-28 23:00:00",
+  "test_end": "2025-12-12 23:00:00",
+  "final_test_mae": 1.1933282414083604,
+  "final_test_rmse": 1.6674643653444223,
+  "cat_features": [
+    "zip"
+  ]
+}
