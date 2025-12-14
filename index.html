@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>UrbanSimAI Chicago — Traffic Speed Forecasting by ZIP</title>
+
+  <!-- SEO -->
+  <meta name="description" content="UrbanSimAI Chicago is a free smart-city demo that forecasts hourly average traffic speed by ZIP code for the next 24 hours using XGBoost and open Chicago data. Includes interactive map + forecast dashboard." />
+  <meta name="keywords" content="UrbanSimAI, Chicago, traffic forecasting, speed prediction, ZIP code, smart city, XGBoost, Streamlit, open data, urban simulation" />
+  <meta name="robots" content="index,follow" />
+
+  <!-- Social preview -->
+  <meta property="og:title" content="UrbanSimAI Chicago — Traffic Speed Forecasting by ZIP" />
+  <meta property="og:description" content="Forecast next 24 hours by ZIP + interactive map. Built with Streamlit + XGBoost + open Chicago data." />
+  <meta property="og:type" content="website" />
+
+  <style>
+    :root{
+      --bg:#070b18; --card:#0f1730; --border:rgba(255,255,255,.10);
+      --text:rgba(235,242,255,.92); --muted:rgba(235,242,255,.70);
+      --btn:#3b82f6; --btnText:#061024;
+    }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:
+        radial-gradient(1000px 500px at 20% 0%, rgba(59,130,246,.25), transparent 60%),
+        radial-gradient(900px 450px at 90% 20%, rgba(16,185,129,.18), transparent 60%),
+        var(--bg);
+      color:var(--text);
+      padding:52px 18px;
+    }
+    .wrap{ max-width:980px; margin:0 auto; }
+    .top{ display:grid; gap:14px; margin-bottom:18px; }
+    h1{ margin:0; font-size:44px; letter-spacing:-.6px; line-height:1.08; }
+    .subtitle{ margin:0; color:var(--muted); font-size:16px; line-height:1.6; }
+
+    .grid{ display:grid; grid-template-columns:1.2fr .8fr; gap:16px; margin-top:18px; }
+    @media (max-width:860px){ .grid{ grid-template-columns:1fr; } }
+
+    .card{
+      background:rgba(15,23,48,.86);
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:20px;
+      box-shadow:0 10px 30px rgba(0,0,0,.35);
+      backdrop-filter:blur(6px);
+    }
+
+    .btns{ display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
+    a.btn{
+      text-decoration:none;
+      padding:12px 15px;
+      border-radius:14px;
+      font-weight:700;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      border:1px solid transparent;
+    }
+    a.primary{ background:var(--btn); color:var(--btnText); }
+    a.ghost{ border-color:rgba(255,255,255,.18); color:var(--text); background:transparent; }
+
+    .pillRow{ display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
+    .pill{
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.06);
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      color:rgba(235,242,255,.80);
+    }
+
+    .list{ margin:10px 0 0 18px; color:var(--muted); line-height:1.6; }
+    .small{ margin-top:14px; font-size:13px; color:rgba(235,242,255,.60); line-height:1.6; }
+
+    .kpi{ display:grid; gap:10px; }
+    .kpi .row{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      padding:10px 12px;
+      border-radius:14px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+    }
+    .kpi .label{ color:rgba(235,242,255,.70); font-size:13px; }
+    .kpi .val{ font-weight:800; }
+
+    .footer{
+      margin-top:18px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      align-items:center;
+      justify-content:space-between;
+      color:rgba(235,242,255,.55);
+      font-size:13px;
+    }
+    code{ background:rgba(255,255,255,.08); padding:2px 6px; border-radius:8px; }
+    a.link{ color:rgba(235,242,255,.85); }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="top">
+      <h1>UrbanSimAI Chicago</h1>
+      <p class="subtitle">
+        A free smart-city demo that forecasts <b>hourly average traffic speed by ZIP code</b> for the <b>next 24 hours</b>,
+        built using <b>XGBoost</b> + open Chicago datasets with a Streamlit dashboard and map.
+      </p>
+
+      <div class="btns">
+        <a class="btn primary" href="https://urbansimaichicago-xvd9jjog6vmlzu9u4f2fjl.streamlit.app" target="_blank" rel="noopener">
+          ▶ Open Live App
+        </a>
+        <a class="btn ghost" href="https://urbansimaichicago-xvd9jjog6vmlzu9u4f2fjl.streamlit.app/#map-latest-observed-hourly-avg-speed-by-zip" target="_blank" rel="noopener">
+          🗺️ Jump to Map
+        </a>
+      </div>
+
+      <div class="pillRow">
+        <span class="pill">Streamlit</span>
+        <span class="pill">XGBoost</span>
+        <span class="pill">Forecasting</span>
+        <span class="pill">Chicago Open Data</span>
+        <span class="pill">ZIP-level</span>
+        <span class="pill">Smart City</span>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h2 style="margin:0 0 8px;">What you can do in the app</h2>
+        <ul class="list">
+          <li>Select a <b>Chicago ZIP code</b> and view trends</li>
+          <li>Generate a <b>24-hour forecast</b> with chart + table</li>
+          <li>Use <b>Backtest mode</b> to compare predicted vs actual</li>
+          <li>Explore a <b>map</b> of latest observed hourly average speed by ZIP</li>
+        </ul>
+
+        <h2 style="margin:16px 0 8px;">Open data sources</h2>
+        <ul class="list">
+          <li>City of Chicago Traffic Tracker (historical + latest snapshot)</li>
+          <li>CTA GTFS (transit stops)</li>
+          <li>Zillow ZHVI (home values by ZIP)</li>
+          <li>OpenStreetMap roads (OSMnx)</li>
+        </ul>
+
+        <p class="small">
+          Keywords for search: <b>UrbanSimAI Chicago</b>, Chicago traffic prediction, hourly speed forecasting, ZIP traffic speed model.
+        </p>
+      </div>
+
+      <div class="card">
+        <h2 style="margin:0 0 10px;">Project facts</h2>
+        <div class="kpi">
+          <div class="row"><div class="label">Model</div><div class="val">XGBoost</div></div>
+          <div class="row"><div class="label">Forecast horizon</div><div class="val">24 hours</div></div>
+          <div class="row"><div class="label">Granularity</div><div class="val">ZIP + hourly</div></div>
+          <div class="row"><div class="label">Deployment</div><div class="val">Streamlit Cloud</div></div>
+          <div class="row"><div class="label">Cost</div><div class="val">Free</div></div>
+        </div>
+
+        <p class="small">
+          Repo includes <code>streamlit_app.py</code>, <code>requirements.txt</code>, the trained model, and processed datasets needed for the app.
+        </p>
+
+        <p class="small">
+          Disclaimer: Educational / portfolio project. Predictions may be inaccurate and should not be used for safety-critical decisions.
+        </p>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div>© UrbanSimAI Chicago • Free demo</div>
+      <div>Live app: <a class="link" href="https://urbansimaichicago-xvd9jjog6vmlzu9u4f2fjl.streamlit.app" target="_blank" rel="noopener">Streamlit</a></div>
+    </div>
+  </div>
+</body>
+</html>
