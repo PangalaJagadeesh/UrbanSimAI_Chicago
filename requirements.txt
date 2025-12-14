@@ -1,0 +1,10 @@
+
+streamlit
+pandas
+numpy
+pyarrow
+fastparquet
+joblib
+holidays
+xgboost
+pydeck

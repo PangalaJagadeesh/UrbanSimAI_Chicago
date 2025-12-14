@@ -1,0 +1,8 @@
+# ignore raw / large stuff
+data_raw/
+**/*.csv
+**/*.csv.part
+**/*parts*
+*.ipynb_checkpoints
+.DS_Store
+__pycache__/
